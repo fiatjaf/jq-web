@@ -6,7 +6,8 @@
   "scripts": {
     "wrap": "browserify --standalone jq jq.raw.js -o jq.js",
     "minify": "uglifyjs jq.js -m -c -o jq.min.js",
-    "prepublish": "npm run wrap && npm run minify"
+    "prepublish": "npm run wrap && npm run minify",
+    "test": "node test.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
   "homepage": "https://github.com/fiatjaf/jq-web#readme",
   "devDependencies": {
     "browserify": "^14.3.0",
+    "tape": "^4.6.3",
     "uglify-js": "^2.8.22"
   }
 }

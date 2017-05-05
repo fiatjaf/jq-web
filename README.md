@@ -1,3 +1,6 @@
+[![npm badge](https://img.shields.io/npm/v/jq-web.svg)](https://www.npmjs.com/package/jq-web)
+[![travis badge](https://travis-ci.org/fiatjaf/jq-web.svg?branch=master)](https://travis-ci.org/fiatjaf/jq-web)
+
 # jq-web
 
 This is a build of [jq](https://github.com/stedolan/jq), the command-line JSON processor in Javascript using [Emscripten](http://kripken.github.io/emscripten-site/) along with a wrapper for making it usable as a library.
