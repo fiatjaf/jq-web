@@ -1,0 +1,32 @@
+{
+  "name": "jq-web",
+  "version": "0.0.1",
+  "description": "a hack that makes jq run in the browser with emscripten.",
+  "main": "jq.min.js",
+  "scripts": {
+    "wrap": "browserify --standalone jq jq.raw.js -o jq.js",
+    "minify": "uglifyjs jq.js -m -c -o jq.min.js",
+    "prepublish": "npm run wrap && npm run minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiatjaf/jq-web.git"
+  },
+  "keywords": [
+    "emscriptem",
+    "jq",
+    "json",
+    "filter",
+    "path"
+  ],
+  "author": "Giovanni T. Parra",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fiatjaf/jq-web/issues"
+  },
+  "homepage": "https://github.com/fiatjaf/jq-web#readme",
+  "devDependencies": {
+    "browserify": "^14.3.0",
+    "uglify-js": "^2.8.22"
+  }
+}
