@@ -1,0 +1,16 @@
+based on https://gist.github.com/passcod/4b382bc836456b77249b
+
+1. download the master.zip (the full repository) of oniguruma and jq from GitHub.
+2. unzip oniguruma, enter the directory, run autoreconf -i, emconfigure ./configure and emmake make
+3. unzip jq, enter the directory, run autoreconf -i
+4. move your own oniguruma directory (which is probably called "oniguruma-master") to "jq-master/modules/oniguruma" (delete the blank directory that comes inside "jq-master/modules/")
+5. do the emscripten install/activate/source thing
+6. run the instructions below with absolute strictness:
+
+```
+emconfigure ./configure --disable-maintainer-mode
+make clean
+env CCFLAGS=-O2 emmake make LDFLAGS=-all-static CCFLAGS=-O2 -j4
+cp jq jq.o
+emcc -O2 --memory-init-file 0 jq.o -o jq.js
+```
