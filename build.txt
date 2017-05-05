@@ -12,5 +12,5 @@ emconfigure ./configure --disable-maintainer-mode
 make clean
 env CCFLAGS=-O2 emmake make LDFLAGS=-all-static CCFLAGS=-O2 -j4
 cp jq jq.o
-emcc -O2 --memory-init-file 0 jq.o -o jq.js
+emcc -03 --memory-init-file 0 --pre-js ~/comp/jq-web/pre.js --post-js ~/comp/jq-web/post.js jq.o -o jq.js
 ```

@@ -1,3 +1,31 @@
+var stdin = ''
+var stdout = ''
+var stderr = ''
+
+var Module = {
+  noInitialRun: true,
+  noExitRuntime: true,
+  preRun: function () {
+    FS.init(
+      function input () {
+        if (stdin) {
+          var c = stdin[0]
+          stdin = stdin.slice(1)
+          return c.charCodeAt(0)
+        } else return null
+      },
+      function output (c) {
+        if (c) stdout += String.fromCharCode(c)
+        else stdout += '\n'
+      },
+      function error (c) {
+        if (c) stderr += String.fromCharCode(c)
+        else stderr += '\n'
+      }
+    )
+  }
+}
+
 // The Module object: Our interface to the outside world. We import
 // and export values on it, and do the work to get that through
 // closure compiler if necessary. There are various ways Module can be used:
@@ -82124,4 +82152,35 @@ run();
 // {{MODULE_ADDITIONS}}
 
 
+
+function exit () {}
+
+function jqfilter (json, filter) {
+  stdin = JSON.stringify(json)
+  stdout = ''
+  stderr = ''
+
+  Module.callMain(['-c', filter])
+
+  // calling main closes stdout, so we reopen it here:
+  FS.streams[1] = FS.open('/dev/stdout', 577, 0)
+
+  stdout = stdout.trim()
+  try {
+    if (stdout.indexOf('\n') !== -1) {
+      return stdout
+        .split('\n')
+        .filter(function (x) { return x })
+        .reduce(function (acc, line) { return acc.concat(JSON.parse(line)) }, [])
+    } else {
+      return JSON.parse(stdout)
+    }
+  } catch (e) {}
+
+  if (stdout) {
+    return stdout
+  }
+
+  throw new Error(stderr)
+}
 
