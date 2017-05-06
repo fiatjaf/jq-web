@@ -27,7 +27,8 @@ nav.nav { background: #b1cae2; }
   -ms-flex-pack: start;
   box-shadow: inset 0 1px 2px rgba(10, 10, 10, .1);
 }
-.json-pretty { padding: 1rem; }
+.CodeMirror { min-height: 466px; }
+.json-pretty { padding: 1rem; min-height: 400px; }
 
 .card {
   margin: 12px 12px 12px 0;

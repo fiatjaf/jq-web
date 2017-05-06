@@ -22,7 +22,7 @@ module.exports = createClass({
   },
 
   componentDidMount () {
-    this.dcalc = debounce(this.calc)
+    this.dcalc = debounce(this.calc, 700)
 
     this.calc()
   },
@@ -57,39 +57,28 @@ module.exports = createClass({
             ])
           ])
         ]),
-        h('main.tile.is-ancestor', [
-          h('.tile.is-vertical', [
-            h('.tile.is-parent', [
-              h('.tile.is-child', [
-                h(CodeMirror, {
-                  value: this.state.input,
-                  onChange: v => { this.change({input: v}) },
-                  options: {
-                    viewportMargin: Infinity,
-                    mode: 'json'
-                  }
+        h('main.columns', [
+          h('.column.is-half', [
+            h(CodeMirror, {
+              value: this.state.input,
+              onChange: v => { this.change({input: v}) },
+              options: {
+                viewportMargin: Infinity,
+                mode: 'application/json',
+                theme: 'xq-dark'
+              }
+            })
+          ]),
+          h('.column.is-half', [
+            h('.field', [
+              h('.control.is-extended', [
+                h('input.input.is-large.filter', {
+                  value: this.state.filter,
+                  onChange: e => { this.change({filter: e.target.value}) }
                 })
               ])
-            ])
-          ]),
-          h('.tile.is-vertical', [
-            h('.tile.is-parent', [
-              h('.tile.is-child', [
-                h('.field', [
-                  h('.control.is-extended', [
-                    h('input.input.is-large.filter', {
-                      value: this.state.filter,
-                      onChange: e => { this.change({filter: e.target.value}) }
-                    })
-                  ])
-                ])
-              ])
             ]),
-            h('.tile.is-parent', [
-              h('.tile.is-child', [
-                h(JSONPretty, {json: this.state.output})
-              ])
-            ])
+            h(JSONPretty, {json: this.state.output})
           ])
         ])
       ])
