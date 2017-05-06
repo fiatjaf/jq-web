@@ -1,0 +1,46 @@
+{
+  "name": "jq-web-demo",
+  "version": "0.0.0",
+  "description": "a demo.",
+  "main": "app.js",
+  "dependencies": {
+    "browserify": "^14.3.0",
+    "browserify-incremental": "^3.1.1",
+    "buble": "^0.15.2",
+    "bubleify": "^0.7.0",
+    "create-react-class": "^15.5.2",
+    "debounce": "^1.0.2",
+    "jq-web": "0.0.1",
+    "react": "^15.5.4",
+    "react-codemirror": "^0.3.0",
+    "react-dom": "^15.5.4",
+    "react-hyperscript": "^3.0.0",
+    "react-json-pretty": "^1.6.3"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "bubleify",
+        {
+          "transforms": {
+            "dangerousTaggedTemplateString": true
+          },
+          "objectAssign": "xtend",
+          "sourceMap": true
+        }
+      ]
+    ]
+  },
+  "scripts": {
+    "watch": "find -name \"*.js\" ! -name \"bundle.js\" ! -path \"*node_modules*\" | entr browserifyinc -vd app.js -o bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiatjaf/jq-web.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fiatjaf/jq-web/issues"
+  },
+  "homepage": "https://github.com/fiatjaf/jq-web#readme"
+}
