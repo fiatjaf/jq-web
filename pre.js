@@ -25,3 +25,8 @@ var Module = {
     )
   }
 }
+
+try {
+  var os = 'os'
+  process.platform = require(os).platform()
+} catch (e) {}

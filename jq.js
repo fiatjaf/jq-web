@@ -28,6 +28,11 @@ var Module = {
   }
 }
 
+try {
+  var os = 'os'
+  process.platform = require(os).platform()
+} catch (e) {}
+
 // The Module object: Our interface to the outside world. We import
 // and export values on it, and do the work to get that through
 // closure compiler if necessary. There are various ways Module can be used:
@@ -82160,12 +82165,13 @@ function exit () {}
 
 // takes a string as input and returns a string
 // like `echo <jsonstring> | jq <filter>`, returning the value of STDOUT
-function raw (jsonstring, filter) {
+function raw (jsonstring, filter, flags) {
   stdin = jsonstring
   stdout = ''
   stderr = ''
 
-  Module.callMain(['-c', filter])
+  flags = flags || []
+  Module.callMain(flags.concat(filter))
 
   // calling main closes stdout, so we reopen it here:
   FS.streams[1] = FS.open('/dev/stdout', 577, 0)
@@ -82180,7 +82186,7 @@ function raw (jsonstring, filter) {
 // takes an object as input and tries to return objects.
 function json (json, filter) {
   var jsonstring = JSON.stringify(json)
-  var result = raw(jsonstring, filter).trim()
+  var result = raw(jsonstring, filter, ['-c']).trim()
 
   if (result.indexOf('\n') !== -1) {
     return result

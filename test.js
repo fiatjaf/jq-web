@@ -1,5 +1,5 @@
 var tape = require('tape')
-var jq = require('./jq.js')
+var jq = require('./jq.min.js')
 
 tape('jq', function (t) {
   t.plan(2)
@@ -11,6 +11,9 @@ tape('jq', function (t) {
 
   t.equals(
     jq.raw('["a", {"12": null}]', '.[1]["12"] | {"what?": .}'),
-    '{"what?":null}'
+    `{
+  "what?": null
+}
+`
   )
 })
