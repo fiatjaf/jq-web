@@ -32,6 +32,14 @@ jq({
 
 the code above returns the string `"empty of useless things"`.
 
+## WebAssembly
+
+There's a WASM version available at `jq.wasm[.min].js`, it is much faster.
+
+If the target browser supports WebAssembly you can just include it normally. It will automatically look for the binary code at `./jq.wasm.wasm`, so make sure it is available.
+
+You can also import it with browserify `require('jq-web/jq.wasm.js')` if you want.
+
 ## reference
 
 `jq(<object>, <filter>) <object>` will take a Javascript object, or scalar, whatever, and dump it to JSON, then it will return whatever your filter outputs and try to convert that into a JS object.
