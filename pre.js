@@ -12,7 +12,7 @@
   var stdin = ''
   var inBuffer = []
   var outBuffer = []
-  var stderr = ''
+  var errBuffer = []
 
   function toByteArray (str) {
     var byteArray = []
@@ -64,8 +64,9 @@
           }
         },
         function error (c) {
-          if (c) stderr += String.fromCharCode(c)
-          else stderr += '\n'
+          if (c) {
+            errBuffer.push(c)
+          }
         }
       )
     }

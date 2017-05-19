@@ -12,7 +12,7 @@
   var stdin = ''
   var inBuffer = []
   var outBuffer = []
-  var stderr = ''
+  var errBuffer = []
 
   function toByteArray (str) {
     var byteArray = []
@@ -64,8 +64,9 @@
           }
         },
         function error (c) {
-          if (c) stderr += String.fromCharCode(c)
-          else stderr += '\n'
+          if (c) {
+            errBuffer.push(c)
+          }
         }
       )
     }
@@ -82212,7 +82213,7 @@ run();
     stdin = jsonstring
     inBuffer = []
     outBuffer = []
-    stderr = ''
+    errBuffer = []
   
     flags = flags || []
     Module.callMain(flags.concat(filter))
@@ -82224,7 +82225,7 @@ run();
       return fromByteArray(outBuffer)
     }
   
-    throw new Error(stderr)
+    throw new Error(fromByArray(errBuffer))
   }
   
   // takes an object as input and tries to return objects.

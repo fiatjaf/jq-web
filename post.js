@@ -7,7 +7,7 @@
     stdin = jsonstring
     inBuffer = []
     outBuffer = []
-    stderr = ''
+    errBuffer = []
   
     flags = flags || []
     Module.callMain(flags.concat(filter))
@@ -19,7 +19,7 @@
       return fromByteArray(outBuffer)
     }
   
-    throw new Error(stderr)
+    throw new Error(fromByArray(errBuffer))
   }
   
   // takes an object as input and tries to return objects.
