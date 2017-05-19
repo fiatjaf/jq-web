@@ -10,9 +10,9 @@ tape('jq', function (t) {
   )
 
   t.equals(
-    jq.raw('["a", {"12": null}]', '.[1]["12"] | {"what?": .}'),
+    jq.raw('["a", {"12": "üñìçôdẽ"}]', '.[1]["12"] | {"what?": .}'),
     `{
-  "what?": null
+  "what?": "üñìçôdẽ"
 }
 `
   )

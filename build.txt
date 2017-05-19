@@ -12,19 +12,19 @@ emconfigure ./configure --disable-maintainer-mode
 make clean
 env CCFLAGS=-O2 emmake make LDFLAGS=-all-static CCFLAGS=-O2 -j4
 cp jq jq.o
-emcc -03 --memory-init-file 0 --pre-js ~/comp/jq-web/pre.js --post-js ~/comp/jq-web/post.js jq.o -o jq.raw.js
+emcc -03 --memory-init-file 0 --pre-js ~/comp/jq-web/pre.js --post-js ~/comp/jq-web/post.js jq.o -o jq.js
 ```
 
 6b. to compile the WebAssembly version run:
 
 ```
-emcc -03 --memory-init-file 0 --pre-js ~/comp/jq-web/pre.js --post-js ~/comp/jq-web/post.js -s WASM=1 jq.o -o jq.wasm.raw.js
+emcc -03 --memory-init-file 0 --pre-js ~/comp/jq-web/pre.js --post-js ~/comp/jq-web/post.js -s WASM=1 jq.o -o jq.wasm.js
 ```
 
 7. move the files from jq-master to this directory:
 
 ```
-cp jq.raw.js jq.wasm.raw.js ~/comp/jq-web/
+cp jq.js jq.wasm.js jq.wasm.wasm ~/comp/jq-web/
 ```
 
 8. wrap these into browserify modules and minify them with uglify (commands explicited at package.json):
