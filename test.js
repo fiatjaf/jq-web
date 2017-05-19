@@ -1,5 +1,5 @@
 var tape = require('tape')
-var jq = require('./jq.min.js')
+var jq = require('.')
 
 tape('jq', function (t) {
   t.plan(2)

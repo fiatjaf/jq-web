@@ -72,11 +72,6 @@
     }
   }
 
-  try {
-    var os = 'os'
-    process.platform = require(os).platform()
-  } catch (e) {}
-
 // The Module object: Our interface to the outside world. We import
 // and export values on it, and do the work to get that through
 // closure compiler if necessary. There are various ways Module can be used:
