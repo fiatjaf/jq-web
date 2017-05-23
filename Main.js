@@ -7,6 +7,8 @@ const jq = window.jq
 const debounce = require('debounce')
 
 require('codemirror/mode/javascript/javascript')
+require('codemirror/addon/mode/simple')
+require('codemirror').defineSimpleMode('jq', require('codemirror-mode-jq'))
 
 const query = qs.parse(location.search.slice(1))
 
@@ -98,7 +100,7 @@ module.exports = createClass({
           ])
         ]),
         h('main.columns', [
-          h('.column.is-half', [
+          h('.column.is-4', [
             h(CodeMirror, {
               value: this.state.input,
               onChange: v => { this.change({input: v}) },
@@ -109,15 +111,18 @@ module.exports = createClass({
               }
             })
           ]),
-          h('.column.is-half', [
-            h('.field', [
-              h('.control.is-extended', [
-                h('input.input.is-large.filter', {
-                  value: this.state.filter,
-                  onChange: e => { this.change({filter: e.target.value}) }
-                })
-              ])
-            ]),
+          h('.column.is-4', [
+            h(CodeMirror, {
+              value: this.state.filter,
+              onChange: v => { this.change({filter: v}) },
+              options: {
+                viewportMargin: Infinity,
+                mode: 'jq',
+                theme: 'xq-dark'
+              }
+            })
+          ]),
+          h('.column.is-4', [
             this.state.output
             ? h(JSONPretty, {json: this.state.output})
             : h('pre', [ h('code', this.state.error) ])

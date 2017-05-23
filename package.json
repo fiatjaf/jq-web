@@ -28,6 +28,7 @@
     ]
   },
   "scripts": {
-    "watch": "find -name \"*.js\" ! -name \"bundle.js\" ! -path \"*node_modules*\" | entr browserifyinc -vd app.js -o bundle.js"
+    "watch": "find -name \"*.js\" ! -name \"bundle.js\" ! -path \"*node_modules*\" | entr browserifyinc -vd app.js -o bundle.js",
+    "build": "browserify app.js | uglifyjs -c -m -o bundle.js --"
   }
 }
