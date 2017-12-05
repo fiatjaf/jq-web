@@ -15,11 +15,15 @@
     // calling main closes stdout, so we reopen it here:
     FS.streams[1] = FS.open('/dev/stdout', 577, 0)
   
-    if (outBuffer) {
+    if (outBuffer.length) {
       return fromByteArray(outBuffer)
     }
   
-    throw new Error(fromByArray(errBuffer))
+    if (errBuffer.length) {
+      throw new Error(fromByteArray(errBuffer))
+    }
+
+    return ''
   }
   
   // takes an object as input and tries to return objects.
