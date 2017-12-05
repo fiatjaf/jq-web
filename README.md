@@ -40,8 +40,16 @@ If the target browser supports WebAssembly you can just include it normally. It 
 
 You can also import it with browserify `require('jq-web/jq.wasm.js')` if you want.
 
+### Webpack
+
+The Emscripten runtime will try to `require` the `fs` module, and if it fails it will resort to an in-memory filesystem (almost no use of that is made by the library, but it is needed somehow). In Browserify there's a default `{}` that corresponds to the `fs` module, but in Webpack you must [declare it as an empty module](https://github.com/fiatjaf/jq-web/issues/5#issuecomment-342694955).
+
 ## reference
 
 `jq(<object>, <filter>) <object>` will take a Javascript object, or scalar, whatever, and dump it to JSON, then it will return whatever your filter outputs and try to convert that into a JS object.
 
 `jq.raw(<json-string>, <filter>) <raw-output>` will take a string that will be passed as it is to jq (like if you were doing `echo '<json-string>' | jq <filter>` on the command line) then return a string with the raw STDOUT response.
+
+### traffic statistics for this repository
+
+[![](https://ght.trackingco.de/fiatjaf/jq-web)](https://ght.trackingco.de/)
