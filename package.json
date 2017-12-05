@@ -6,7 +6,7 @@
   "scripts": {
     "minify": "uglifyjs jq.js -m -c -o jq.min.js",
     "minify-wasm": "uglifyjs jq.wasm.js -m -c -o jq.wasm.min.js",
-    "prepublish": "npm run minify && npm run minify-wasm",
+    "build": "npm run minify && npm run minify-wasm",
     "test": "node test.js"
   },
   "repository": {

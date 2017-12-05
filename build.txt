@@ -5,7 +5,7 @@ based on https://gist.github.com/passcod/4b382bc836456b77249b
 3. unzip jq, enter the directory, run autoreconf -i
 4. move your own oniguruma directory (which is probably called "oniguruma-master") to "jq-master/modules/oniguruma" (delete the blank directory that comes inside "jq-master/modules/")
 5. do the emscripten install/activate/source thing
-6a. run the instructions below with absolute strictness:
+6a. run the instructions below with absolute strictness (in the jq-master directory):
 
 ```
 emconfigure ./configure --disable-maintainer-mode
@@ -30,5 +30,5 @@ cp jq.js jq.wasm.js jq.wasm.wasm ~/comp/jq-web/
 8. wrap these into browserify modules and minify them with uglify (commands explicited at package.json):
 
 ```
-npm run prepublish
+npm run build
 ```
