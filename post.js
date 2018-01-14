@@ -21,7 +21,13 @@
     }
   
     if (errBuffer.length) {
-      throw new Error(fromByteArray(errBuffer))
+      var errBufferContents = fromByteArray(errBuffer)
+      var errString = errBufferContents
+      if (errString.indexOf(':') > -1) {
+        var parts = errString.split(':')
+        errString = parts[parts.length - 1].trim()
+      }
+      throw new Error(errString)
     }
 
     return ''
