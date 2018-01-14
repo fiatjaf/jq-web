@@ -14,7 +14,8 @@
   
     // calling main closes stdout, so we reopen it here:
     FS.streams[1] = FS.open('/dev/stdout', 577, 0)
-  
+    FS.streams[2] = FS.open('/dev/stderr', 577, 0)
+
     if (outBuffer.length) {
       return fromByteArray(outBuffer).trim();
     }
