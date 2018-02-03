@@ -16,7 +16,7 @@
     FS.streams[1] = FS.open('/dev/stdout', 577, 0)
   
     if (outBuffer.length) {
-      return fromByteArray(outBuffer)
+      return fromByteArray(outBuffer).trim();
     }
   
     if (errBuffer.length) {
