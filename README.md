@@ -1,5 +1,4 @@
 [![npm badge](https://img.shields.io/npm/v/jq-web.svg)](https://www.npmjs.com/package/jq-web)
-[![travis badge](https://travis-ci.org/fiatjaf/jq-web.svg?branch=master)](https://travis-ci.org/fiatjaf/jq-web)
 
 # jq-web
 
