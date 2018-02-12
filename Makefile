@@ -41,5 +41,8 @@ jq.wasm.min.js: node_modules/.bin/uglifyjs jq.wasm.js
 test: node_modules/.bin/tape
 	node test.js
 
-node_modules/*:
+node_modules/.bin/tape:
+	npm install
+
+node_modules/.bin/uglifyjs:
 	npm install

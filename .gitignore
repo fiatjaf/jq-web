@@ -3,3 +3,4 @@ npm-debug.log
 browserify-cache.json
 *.swo
 *.swp
+jq.*
