@@ -1,6 +1,6 @@
 # based on https://gist.github.com/passcod/4b382bc836456b77249b
 #
-# befofe hitting 'make' you should have a shell with emconfigure and emcc
+# befofe hitting 'make' you should have a shell with emconfigure and emcc.
 # install emscripten and follow instructions here:
 #   https://kripken.github.io/emscripten-site/docs/tools_reference/emsdk.html
 # basically you must call (on bash):

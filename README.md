@@ -50,6 +50,16 @@ The Emscripten runtime will try to `require` the `fs` module, and if it fails it
 
 `jq.raw(<json-string>, <filter>) <raw-output>` will take a string that will be passed as it is to jq (like if you were doing `echo '<json-string>' | jq <filter>` on the command line) then return a string with the raw STDOUT response.
 
+## build
+
+```
+cat Makefile | head -n 10
+# read it.
+# then:
+
+make
+```
+
 ### traffic statistics for this repository
 
 [![](https://ght.trackingco.de/fiatjaf/jq-web)](https://ght.trackingco.de/)
