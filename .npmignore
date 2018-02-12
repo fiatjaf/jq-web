@@ -1,0 +1,9 @@
+jq
+node_modules
+.*
+Makefile
+post.js
+pre.js
+index.html
+test.js
+*.tgz
