@@ -1,6 +1,6 @@
 {
   "name": "jq-web",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "description": "a hack that makes jq run in the browser with emscripten.",
   "main": "jq.min.js",
   "scripts": {
