@@ -9,9 +9,12 @@
 #  ~/emsdk-portable/emsdk activate latest
 #  source ~/emsdk-portable/emsdk_env.sh
 
-all: jq.js jq.min.js jq.wasm.js jq.wasm.min.js jq.wasm.wasm
+all: jq.js jq.min.js jq.wasm.js jq.wasm.min.js jq.wasm.wasm jq.bundle.js jq.bundle.min.js
 
-jq/configure:
+clean:
+	rm jq.*
+
+jq/configure: .gitmodules
 	git submodule update --init
 	cd jq && \
 	  git submodule update --init && \
@@ -24,16 +27,23 @@ jq/jq.o: jq/configure
 	  env CCFLAGS=-O2 emmake make LDFLAGS=-all-static CCFLAGS=-O2 -j4 && \
 	  cp jq jq.o
 
-jq.js: jq/jq.o
+jq.js: jq/jq.o pre.js post.js
 	cd jq && \
-	  emcc -03 --memory-init-file 0 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.js
-
-jq.wasm.js: jq/jq.o
-	cd jq && \
-	  emcc -03 --memory-init-file 0 --pre-js ../pre.js --post-js ../post.js -s WASM=1 jq.o -o ../jq.wasm.js
+	  emcc -O3 -s TOTAL_MEMORY=32MB --memory-init-file 1 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.js
 
 jq.min.js: node_modules/.bin/uglifyjs jq.js
 	./node_modules/.bin/uglifyjs jq.js -m -c -o jq.min.js
+
+jq.bundle.js: jq/jq.o pre.js post.js
+	cd jq && \
+	  emcc -O3 -s ALLOW_MEMORY_GROWTH=1 --memory-init-file 0 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.bundle.js
+
+jq.bundle.min.js: node_modules/.bin/uglifyjs jq.bundle.js
+	./node_modules/.bin/uglifyjs jq.js -m -c -o jq.bundle.min.js
+
+jq.wasm.js: jq/jq.o
+	cd jq && \
+	  emcc -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -O0 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.wasm.js
 
 jq.wasm.min.js: node_modules/.bin/uglifyjs jq.wasm.js
 	uglifyjs jq.wasm.js -m -c -o jq.wasm.min.js

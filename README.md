@@ -39,7 +39,13 @@ If the target browser supports WebAssembly you can just include it normally. It 
 
 You can also import it with browserify `require('jq-web/jq.wasm.js')` if you want.
 
-### Webpack
+## Using the non-bundled version
+
+If you can't use WebAssembly, there's a better way to use the asm.js version.
+
+By default, requiring `jq-web` will give you the `./jq.bundle.min.js` file, which comes bundled with the static memory initialization inside the JS code. That's inefficient. For better performance and load sizes, require `jq-web/jq[.min].js` instead, and copy `node_modules/jq-web/jq.js.mem` to the directory you're serving the app from, as it will be loaded asynchronously in the runtime by the library.
+
+### Webpack issues
 
 The Emscripten runtime will try to `require` the `fs` module, and if it fails it will resort to an in-memory filesystem (almost no use of that is made by the library, but it is needed somehow). In Browserify there's a default `{}` that corresponds to the `fs` module, but in Webpack you must [declare it as an empty module](https://github.com/fiatjaf/jq-web/issues/5#issuecomment-342694955).
 
