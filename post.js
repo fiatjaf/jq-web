@@ -55,5 +55,14 @@
   var jq = json
   jq.raw = raw
 
+  jq.onInitialized = {
+    addListener: function (cb) {
+      if (initialized) {
+        cb()
+      }
+      initListeners.push(cb)
+    }
+  }
+
   return jq
 }))

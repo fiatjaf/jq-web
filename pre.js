@@ -10,6 +10,7 @@
   }
 }(this, function () {
   var initialized = false
+  var initListeners = []
 
   var stdin = ''
   var inBuffer = []
@@ -47,6 +48,9 @@
     noExitRuntime: true,
     onRuntimeInitialized: function () {
       initialized = true
+      initListeners.forEach(function (cb) {
+        cb()
+      })
     },
     preRun: function () {
       FS.init(
