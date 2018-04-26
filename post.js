@@ -64,5 +64,22 @@
     }
   }
 
+  jq.promised = function () {
+    if (initialized) return Promise.resolve(jq.apply(jq, arguments))
+    return new Promise(function (resolve) {
+      jq.onInitialized.addListener(function () {
+        resolve(jq.apply(jq, arguments))
+      })
+    })
+  }
+  jq.promised.raw = function () {
+    if (initialized) return Promise.resolve(jq.raw.apply(jq, arguments))
+    return new Promise(function (resolve) {
+      jq.onInitialized.addListener(function () {
+        resolve(jq.raw.apply(jq, arguments))
+      })
+    })
+  }
+
   return jq
 }))
