@@ -9,6 +9,8 @@
     root.jq = factory()
   }
 }(this, function () {
+  var initialized = false
+
   var stdin = ''
   var inBuffer = []
   var outBuffer = []
@@ -43,6 +45,9 @@
   var Module = {
     noInitialRun: true,
     noExitRuntime: true,
+    onRuntimeInitialized: function () {
+      initialized = true
+    },
     preRun: function () {
       FS.init(
         function input () {

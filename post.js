@@ -4,6 +4,8 @@
   // takes a string as input and returns a string
   // like `echo <jsonstring> | jq <filter>`, returning the value of STDOUT
   function raw (jsonstring, filter, flags) {
+    if (!initialized) return '{}'
+
     stdin = jsonstring
     inBuffer = []
     outBuffer = []
@@ -35,6 +37,8 @@
   
   // takes an object as input and tries to return objects.
   function json (json, filter) {
+    if (!initialized) return {}
+
     var jsonstring = JSON.stringify(json)
     var result = raw(jsonstring, filter, ['-c']).trim()
   
