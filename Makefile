@@ -41,7 +41,7 @@ jq.bundle.js: jq/jq.o pre.js post.js
 jq.bundle.min.js: node_modules/.bin/uglifyjs jq.bundle.js
 	./node_modules/.bin/uglifyjs jq.js -m -c -o jq.bundle.min.js
 
-jq.wasm.js: jq/jq.o
+jq.wasm.js: jq/jq.o pre.js post.js
 	cd jq && \
 	  emcc -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -O0 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.wasm.js
 
