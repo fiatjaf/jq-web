@@ -29,7 +29,9 @@ jq({
 }, '.a.big.json | ["empty", .[1], "useless", .[3]] | join(" ")')
 ```
 
-the code above returns the string `"empty of useless things"`.
+The code above returns the string `"empty of useless things"`.
+
+You could do the same using the promised API with `jq.promised({...}).then(result => {})`. That is useful if you're loading a `.mem` or `.wasm` file, as the library won't return the correct results until these files are asynchronously fetched by the Emscripten runtime.
 
 ## WebAssembly
 
