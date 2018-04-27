@@ -65,10 +65,11 @@
   }
 
   jq.promised = function () {
+    var args = arguments
     return new Promise(function (resolve, reject) {
       jq.onInitialized.addListener(function () {
         try {
-          resolve(jq.apply(jq, arguments))
+          resolve(jq.apply(jq, args))
         } catch (e) {
           reject(e)
         }
@@ -76,10 +77,11 @@
     })
   }
   jq.promised.raw = function () {
+    var args = arguments
     return new Promise(function (resolve, reject) {
       jq.onInitialized.addListener(function () {
         try {
-          resolve(jq.raw.apply(jq, arguments))
+          resolve(jq.raw.apply(jq, args))
         } catch (e) {
           reject(e)
         }
