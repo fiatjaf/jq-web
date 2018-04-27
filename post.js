@@ -65,18 +65,24 @@
   }
 
   jq.promised = function () {
-    if (initialized) return Promise.resolve(jq.apply(jq, arguments))
-    return new Promise(function (resolve) {
+    return new Promise(function (resolve, reject) {
       jq.onInitialized.addListener(function () {
-        resolve(jq.apply(jq, arguments))
+        try {
+          resolve(jq.apply(jq, arguments))
+        } catch (e) {
+          reject(e)
+        }
       })
     })
   }
   jq.promised.raw = function () {
-    if (initialized) return Promise.resolve(jq.raw.apply(jq, arguments))
-    return new Promise(function (resolve) {
+    return new Promise(function (resolve, reject) {
       jq.onInitialized.addListener(function () {
-        resolve(jq.raw.apply(jq, arguments))
+        try {
+          resolve(jq.raw.apply(jq, arguments))
+        } catch (e) {
+          reject(e)
+        }
       })
     })
   }
