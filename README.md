@@ -41,7 +41,7 @@ If the target browser supports WebAssembly you can just include it normally. It 
 
 You can also import it with browserify `require('jq-web/jq.wasm.js')` if you want.
 
-## Using the non-bundled version
+## using the non-bundled version
 
 If you can't use WebAssembly, there's a better way to use the asm.js version.
 
@@ -53,9 +53,16 @@ The Emscripten runtime will try to `require` the `fs` module, and if it fails it
 
 ## reference
 
-`jq(<object>, <filter>) <object>` will take a Javascript object, or scalar, whatever, and dump it to JSON, then it will return whatever your filter outputs and try to convert that into a JS object.
+`jq(<object>, <filter>) <object>` will take a Javascript object, or scalar, whatever, and dump it to JSON, then it will return whatever your filter outputs and try to convert that into a JS object. If you're loading `.mem` or `.wasm` files asynchronously this will return `{}` every time you call it until the loading is finished.
 
-`jq.raw(<json-string>, <filter>) <raw-output>` will take a string that will be passed as it is to jq (like if you were doing `echo '<json-string>' | jq <filter>` on the command line) then return a string with the raw STDOUT response.
+`jq.raw(<json-string>, <filter>) <raw-output>` will take a string that will be passed as it is to jq (like if you were doing `echo '<json-string>' | jq <filter>` on the command line) then return a string with the raw STDOUT response. If you're loading `.mem` or `.wasm` files asynchronously this will return `'{}'` every time you call it until the loading is finished.
+
+`jq.onInitialized.addListener(<function>)` registers a function to be called when `.mem` or `.wasm` files have finished loading and the library is ready to be used. You should register callbacks here to rerun your functions if you're using the sync API (above). If you're using the promised API (below) you don't ever need to look at this. Also, if you're using the sync API but just at a long time after the page is loaded and the user inputs something, for example, you may not need to use this at all.
+
+`jq.promised(<object>, <filter>) Promise<object>` will do the same as `jq()` but returning a Promise to the result instead. This is safe to use anytime.
+
+`jq.promised.raw(<json-string>, <filter>) Promise<raw-output>` will do the same as `jq.raw()` but returning a Promise to the result instead. This is safe to use anytime.
+
 
 ## build
 
