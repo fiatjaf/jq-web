@@ -19,28 +19,20 @@
 
   function toByteArray (str) {
     var byteArray = []
-    for (var i = 0; i < str.length; i++) {
-      if (str.charCodeAt(i) <= 0x7F) {
-        byteArray.push(str.charCodeAt(i))
-      } else {
-        var h = encodeURIComponent(str.charAt(i)).substr(1).split('%')
-        for (var j = 0; j < h.length; j++) {
-          byteArray.push(parseInt(h[j], 16))
-        }
-      }
+    const encodedStr = unescape(encodeURIComponent(str))
+    for (var i = 0; i < encodedStr.length; i++) {
+      byteArray.push(encodedStr.charCodeAt(i));
     }
     return byteArray
   }
-
-  function pad (n) { return n.length < 2 ? '0' + n : n }
 
   function fromByteArray (data) {
     var array = new Uint8Array(data)
     var str = ''
     for(var i = 0; i < array.length; ++i) {
-      str += ('%' + pad(array[i].toString(16)))
+      str += String.fromCharCode(array[i])
     }
-    return decodeURIComponent(str)
+    return decodeURIComponent(escape(str))
   }
 
   var Module = {
@@ -60,7 +52,6 @@
           }
 
           if (!stdin) return null
- 
           inBuffer = toByteArray(stdin)
           stdin = ''
           inBuffer.push(null)

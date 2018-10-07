@@ -29,14 +29,14 @@ jq/jq.o: jq/configure
 
 jq.js: jq/jq.o pre.js post.js
 	cd jq && \
-	  emcc -O3 -s TOTAL_MEMORY=32MB --memory-init-file 1 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.js
+	  emcc -O2 -s TOTAL_MEMORY=32MB --memory-init-file 1 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.js
 
 jq.min.js: node_modules/.bin/uglifyjs jq.js
 	./node_modules/.bin/uglifyjs jq.js -m -c -o jq.min.js
 
 jq.bundle.js: jq/jq.o pre.js post.js
 	cd jq && \
-	  emcc -O3 -s ALLOW_MEMORY_GROWTH=1 --memory-init-file 0 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.bundle.js
+	  emcc -O2 -s ALLOW_MEMORY_GROWTH=1 --memory-init-file 0 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.bundle.js
 
 jq.bundle.min.js: node_modules/.bin/uglifyjs jq.bundle.js
 	./node_modules/.bin/uglifyjs jq.js -m -c -o jq.bundle.min.js
