@@ -19,7 +19,7 @@
 
   function toByteArray (str) {
     var byteArray = []
-    const encodedStr = unescape(encodeURIComponent(str))
+    var encodedStr = unescape(encodeURIComponent(str))
     for (var i = 0; i < encodedStr.length; i++) {
       byteArray.push(encodedStr.charCodeAt(i));
     }
