@@ -24,39 +24,42 @@ function fromByteArray(data) {
   return decodeURIComponent(escape(str));
 }
 
-Module = {
-  noInitialRun: true,
-  noExitRuntime: true,
-  onRuntimeInitialized: function() {
-    initialized = true;
-    initListeners.forEach(function(cb) {
-      cb();
-    });
-  },
-  preRun: function() {
-    FS.init(
-      function input() {
-        if (inBuffer.length) {
-          return inBuffer.pop();
-        }
+Module = Object.assign(
+  {
+    noInitialRun: true,
+    noExitRuntime: true,
+    onRuntimeInitialized: function() {
+      initialized = true;
+      initListeners.forEach(function(cb) {
+        cb();
+      });
+    },
+    preRun: function() {
+      FS.init(
+        function input() {
+          if (inBuffer.length) {
+            return inBuffer.pop();
+          }
 
-        if (!stdin) return null;
-        inBuffer = toByteArray(stdin);
-        stdin = "";
-        inBuffer.push(null);
-        inBuffer.reverse();
-        return inBuffer.pop();
-      },
-      function output(c) {
-        if (c) {
-          outBuffer.push(c);
+          if (!stdin) return null;
+          inBuffer = toByteArray(stdin);
+          stdin = "";
+          inBuffer.push(null);
+          inBuffer.reverse();
+          return inBuffer.pop();
+        },
+        function output(c) {
+          if (c) {
+            outBuffer.push(c);
+          }
+        },
+        function error(c) {
+          if (c) {
+            errBuffer.push(c);
+          }
         }
-      },
-      function error(c) {
-        if (c) {
-          errBuffer.push(c);
-        }
-      }
-    );
-  }
-};
+      );
+    }
+  },
+  Module
+);

@@ -1,7 +1,7 @@
 var tape = require("tape");
 
 tape("jq", function(t) {
-  var jq = require("./jq.bundle.js");
+  var jq = require("./jq.js")();
   t.plan(3);
 
   jq.onInitialized.addListener(() => {
@@ -26,7 +26,7 @@ tape("jq", function(t) {
 });
 
 tape("jq.min", function(t) {
-  var jq = require("./jq.min.js");
+  var jq = require("./jq.min.js")();
   t.plan(3);
 
   jq.onInitialized.addListener(() => {
