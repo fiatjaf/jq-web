@@ -1,7 +1,9 @@
 var tape = require("tape");
 
+var jq = require("./jq.js")();
+var jqMin = require("./jq.min.js")();
+
 tape("jq", function(t) {
-  var jq = require("./jq.js")();
   t.plan(3);
 
   jq.onInitialized.addListener(() => {
@@ -26,12 +28,11 @@ tape("jq", function(t) {
 });
 
 tape("jq.min", function(t) {
-  var jq = require("./jq.min.js")();
   t.plan(3);
 
-  jq.onInitialized.addListener(() => {
+  jqMin.onInitialized.addListener(() => {
     t.deepEquals(
-      jq.json(
+      jqMin.json(
         { a: "a letter", b: "other letter", "%": null },
         '[.a, .["%"]] | {res: .}'
       ),
@@ -39,13 +40,32 @@ tape("jq.min", function(t) {
     );
 
     t.equals(
-      jq.raw('["a", {"12": "üñìçôdẽ"}]', '.[1]["12"] | {"what?": .}'),
+      jqMin.raw('["a", {"12": "üñìçôdẽ"}]', '.[1]["12"] | {"what?": .}'),
       `{\n  "what?": "üñìçôdẽ"\n}`
     );
 
     t.equals(
-      jq.json({ message: "This is an emoji test 🙏" }, ".message"),
+      jqMin.json({ message: "This is an emoji test 🙏" }, ".message"),
       "This is an emoji test 🙏"
     );
   });
+});
+
+tape("jq.promise", function(t) {
+  t.plan(2);
+
+  jqMin.promised
+    .json(
+      { a: "a letter", b: "other letter", "%": null },
+      '[.a, .["%"]] | {res: .}'
+    )
+    .then(res => {
+      t.deepEquals(res, { res: ["a letter", null] });
+    });
+
+  jqMin.promised
+    .raw('["a", {"12": "üñìçôdẽ"}]', '.[1]["12"] | {"what?": .}')
+    .then(res => {
+      t.equals(res, `{\n  "what?": "üñìçôdẽ"\n}`);
+    });
 });

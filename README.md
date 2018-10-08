@@ -25,14 +25,14 @@ jq.json({
         'important',
         'things'
       ]
-    } 
+    }
   }
 }, '.a.big.json | ["empty", .[1], "useless", .[3]] | join(" ")')
 ```
 
 The code above returns the string `"empty of useless things"`.
 
-You could do the same using the promised API with `jq.promised({...}).then(result => {})`. That is useful if you're loading a `.mem` or `.wasm` file, as the library won't return the correct results until these files are asynchronously fetched by the Emscripten runtime.
+You could do the same using the promised API with `jq.promised.json({...}).then(result => {})`. That is useful if you're loading a `.mem` or `.wasm` file, as the library won't return the correct results until these files are asynchronously fetched by the Emscripten runtime.
 
 ## WebAssembly
 
@@ -79,7 +79,7 @@ var jq = jqModule({
 
 `jq.onInitialized.addListener(<function>)` registers a function to be called when `.mem` or `.wasm` files have finished loading and the library is ready to be used. You should register callbacks here to rerun your functions if you're using the sync API (above). If you're using the promised API (below) you don't ever need to look at this. Also, if you're using the sync API but just at a long time after the page is loaded and the user inputs something, for example, you may not need to use this at all.
 
-`jq.promised(<object>, <filter>) Promise<object>` will do the same as `jq()` but returning a Promise to the result instead. This is safe to use anytime.
+`jq.promised.json(<object>, <filter>) Promise<object>` will do the same as `jq.json()` but returning a Promise to the result instead. This is safe to use anytime.
 
 `jq.promised.raw(<json-string>, <filter>) Promise<raw-output>` will do the same as `jq.raw()` but returning a Promise to the result instead. This is safe to use anytime.
 
@@ -90,7 +90,7 @@ var jq = jqModule({
 3. Look over the `Makefile`
 4. `make`
     * This may take awhile the first time if you have never ran Emscripten before
-    
+
 ## Test
 A handful of tests exist in `test.js` and are good place to start when verifying a build
 1. `npm install` or `yarn`

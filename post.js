@@ -68,12 +68,13 @@ Module.onInitialized = {
   }
 };
 
-Module.promised = function() {
+Module.promised = {};
+Module.promised.json = function() {
   var args = arguments;
   return new Promise(function(resolve, reject) {
-    jq.onInitialized.addListener(function() {
+    Module.onInitialized.addListener(function() {
       try {
-        resolve(jq.apply(jq, args));
+        resolve(Module.json.apply(Module, args));
       } catch (e) {
         reject(e);
       }
@@ -83,9 +84,9 @@ Module.promised = function() {
 Module.promised.raw = function() {
   var args = arguments;
   return new Promise(function(resolve, reject) {
-    jq.onInitialized.addListener(function() {
+    Module.onInitialized.addListener(function() {
       try {
-        resolve(jq.raw.apply(jq, args));
+        resolve(Module.raw.apply(Module, args));
       } catch (e) {
         reject(e);
       }
