@@ -13,8 +13,7 @@ npm install jq-web
 ```
 
 ```js
-var jqModule = require('jq-web')
-var jq = jqModule()
+var jq = require('jq-web')
 
 jq.json({
   a: {
@@ -54,7 +53,7 @@ By default, requiring `jq-web` will give you the `./jq.bundle.min.js` file, whic
 The Emscripten runtime will try to `require` the `fs` module, and if it fails it will resort to an in-memory filesystem (almost no use of that is made by the library, but it is needed somehow). In Browserify there's a default `{}` that corresponds to the `fs` module, but in Webpack you must [declare it as an empty module](https://github.com/fiatjaf/jq-web/issues/5#issuecomment-342694955).
 
 #### 404 error when loading `.wasm` files
-By default projects compiled with Emscripten look for `.wasm` files in the same directory that the `.js` file is run from. This causes issues when using webpack because name of the `.wasm` file is altered with a hash and can be placed in a different directory. To fix this problem you can pass a `locateFile` function to the module constructor which tells it where to look for files.
+By default projects compiled with Emscripten look for `.wasm` files in the same directory that the `.js` file is run from. This causes issues when using webpack because name of the `.wasm` file is altered with a hash and can be placed in a different directory. To fix this problem you can use the [copy-webpack-plugin](https://github.com/webpack-contrib/copy-webpack-plugin) to copy the `jq.wasm` file to the same directory that the webpack bundle is placed.
 
 ##### When the module looks for a file ending in `.wasm` file it is given the path to `jq.wasm` otherwise it returns the default path
 ```
