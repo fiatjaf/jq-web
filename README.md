@@ -33,6 +33,23 @@ The code above returns the string `"empty of useless things"`.
 
 You could do the same using the promised API with `jq.promised.json({...}).then(result => {})`. That is useful if you're loading a `.mem` or `.wasm` file, as the library won't return the correct results until these files are asynchronously fetched by the Emscripten runtime.
 
+## What is each file
+
+The [releases page](https://github.com/fiatjaf/jq-web/releases) has a bunch of different files you can download, here's what they all mean:
+
+| file                 | description                                                                  | pros                             | cons                                                                                               |
+|----------------------|------------------------------------------------------------------------------|----------------------------------|----------------------------------------------------------------------------------------------------|
+| jq.asm.js            | [asm.js](http://asmjs.org/) version                                                               | runs in most places              | requires loading jq.asm.js.mem                                                                     |
+| jq.asm.min.js        | minified version of the above                                                | idem                             | idem                                                                                               |
+| jq.asm.js.mem        | memory initialization file for asm.js, needed by jq.asm.js and jq.asm.min.js |                                  |                                                                                                    |
+| jq.asm.bundle.js     | asm.js version with memory initialization embedded                           | doesn't require loading anything | big and slow                                                                                       |
+| jq.asm.bundle.min.js | minified version of the above                                                | idem                             | the minification has no effect in the memory initialization stuff                                  |
+| jq.wasm.js           | [WebAssembly](https://webassembly.org/) version                                                          | smaller, much much faster        | requires loading jq.wasm.wasm                                                                      |
+| jq.wasm.min.js       | minified WebAssembly version                                                 |                                  | since this is just a wrapper around jq.wasm.wasm, the minification makes almost no difference here |
+| jq.wasm.wasm         | actual WebAssembly binary                                              |                                  |                                                                                                    |
+
+When in doubt, just use `jq.wasm.js`, it is the best!
+
 ## WebAssembly
 
 There's a WASM version available at `jq.wasm[.min].js`, it is much faster.
@@ -45,7 +62,7 @@ You can also import it with browserify `require('jq-web/jq.wasm.js')` if you wan
 
 If you can't use WebAssembly, there's a better way to use the asm.js version.
 
-By default, requiring `jq-web` will give you the `./jq.bundle.min.js` file, which comes bundled with the static memory initialization inside the JS code. That's inefficient. For better performance and load sizes, require `jq-web/jq[.min].js` instead, and copy `node_modules/jq-web/jq.js.mem` to the directory you're serving the app from, as it will be loaded asynchronously in the runtime by the library.
+By default, requiring `jq-web` will give you the `./jq.asm.bundle.min.js` file, which comes bundled with the static memory initialization inside the JS code. That's inefficient. For better performance and load sizes, require `jq-web/jq[.min].js` instead, and copy `node_modules/jq-web/jq.asm.js.mem` to the directory you're serving the app from, as it will be loaded asynchronously in the runtime by the library.
 
 ### Webpack issues
 
