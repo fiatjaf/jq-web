@@ -79,3 +79,4 @@ By default projects compiled with Emscripten look for `.wasm` files in the same 
 A handful of tests exist in `test.js` and are good place to start when verifying a build
 1. `npm install` or `yarn`
 2. `node test.js`
+3. `./node_modules/live-server/live-server.js --open="index.html"`

@@ -1,6 +1,6 @@
 {
   "name": "jq-web",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "a hack that makes jq run in the browser with emscripten.",
   "main": "jq.bundle.min.js",
   "scripts": {
@@ -25,9 +25,7 @@
   "homepage": "https://github.com/fiatjaf/jq-web#readme",
   "devDependencies": {
     "tape": "^4.9.1",
-    "uglify-es": "^3.3.9"
-  },
-  "dependencies": {
+    "uglify-es": "^3.3.9",
     "live-server": "^1.2.0"
   }
 }

@@ -1,4 +1,15 @@
 <!doctype html>
-
 <meta charset=utf-8>
-<script src=jq.wasm.js></script>
+<title>jq-web web test</title>
+<h2>Check that <code>[5, "çá"]</code> is printed in the next line:</h2>
+<pre><code id="result">
+
+</code></pre>
+<script src="jq.wasm.js"></script>
+<script>
+// simple web test to ensure basic functionality, see test.js for a more complete test suite
+jq.promised.json({foo: 5, un: 'à'}, '[.foo, "ç\\(.un)"]').then((res) => {
+  console.log(res)
+  window.result.innerHTML = JSON.stringify(res, null, 2)
+})
+</script>
