@@ -1,82 +1,66 @@
-(function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define(function (a) {
-      return factory()
-    })
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory()
-  } else {
-    root.jq = factory()
+var initialized = false;
+var initListeners = [];
+
+var stdin = "";
+var inBuffer = [];
+var outBuffer = [];
+var errBuffer = [];
+
+function toByteArray(str) {
+  var byteArray = [];
+  var encodedStr = unescape(encodeURIComponent(str));
+  for (var i = 0; i < encodedStr.length; i++) {
+    byteArray.push(encodedStr.charCodeAt(i));
   }
-}(this, function () {
-  var initialized = false
-  var initListeners = []
+  return byteArray;
+}
 
-  var stdin = ''
-  var inBuffer = []
-  var outBuffer = []
-  var errBuffer = []
-
-  function toByteArray (str) {
-    var byteArray = []
-    for (var i = 0; i < str.length; i++) {
-      if (str.charCodeAt(i) <= 0x7F) {
-        byteArray.push(str.charCodeAt(i))
-      } else {
-        var h = encodeURIComponent(str.charAt(i)).substr(1).split('%')
-        for (var j = 0; j < h.length; j++) {
-          byteArray.push(parseInt(h[j], 16))
-        }
-      }
-    }
-    return byteArray
+function fromByteArray(data) {
+  var array = new Uint8Array(data);
+  var str = "";
+  for (var i = 0; i < array.length; ++i) {
+    str += String.fromCharCode(array[i]);
   }
+  return decodeURIComponent(escape(str));
+}
 
-  function pad (n) { return n.length < 2 ? '0' + n : n }
-
-  function fromByteArray (data) {
-    var array = new Uint8Array(data)
-    var str = ''
-    for(var i = 0; i < array.length; ++i) {
-      str += ('%' + pad(array[i].toString(16)))
-    }
-    return decodeURIComponent(str)
-  }
-
-  var Module = {
+// Note about Emscripten, even though the module is now named 'jq', pre.js still uses Module, but post.js uses 'jq'
+Module = Object.assign(
+  {
     noInitialRun: true,
     noExitRuntime: true,
-    onRuntimeInitialized: function () {
-      initialized = true
-      initListeners.forEach(function (cb) {
-        cb()
-      })
+    onRuntimeInitialized: function() {
+      initialized = true;
+      initListeners.forEach(function(cb) {
+        cb();
+      });
     },
-    preRun: function () {
+    preRun: function() {
       FS.init(
-        function input () {
+        function input() {
           if (inBuffer.length) {
-            return inBuffer.pop()
+            return inBuffer.pop();
           }
 
-          if (!stdin) return null
- 
-          inBuffer = toByteArray(stdin)
-          stdin = ''
-          inBuffer.push(null)
-          inBuffer.reverse()
-          return inBuffer.pop()
+          if (!stdin) return null;
+          inBuffer = toByteArray(stdin);
+          stdin = "";
+          inBuffer.push(null);
+          inBuffer.reverse();
+          return inBuffer.pop();
         },
-        function output (c) {
+        function output(c) {
           if (c) {
-            outBuffer.push(c)
+            outBuffer.push(c);
           }
         },
-        function error (c) {
+        function error(c) {
           if (c) {
-            errBuffer.push(c)
+            errBuffer.push(c);
           }
         }
-      )
+      );
     }
-  }
+  },
+  Module
+);

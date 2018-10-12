@@ -24,7 +24,10 @@
   },
   "homepage": "https://github.com/fiatjaf/jq-web#readme",
   "devDependencies": {
-    "tape": "^4.6.3",
-    "uglify-js": "^2.8.22"
+    "tape": "^4.9.1",
+    "uglify-es": "^3.3.9"
+  },
+  "dependencies": {
+    "live-server": "^1.2.0"
   }
 }
