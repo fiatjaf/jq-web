@@ -46,7 +46,7 @@ jq.wasm.js: jq/jq.o pre.js post.js
 	  emcc -O3 -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE_INSTANCE=1 -s EXPORT_NAME="jq" -s WASM=1 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.wasm.js
 
 jq.wasm.min.js: node_modules/.bin/uglifyjs jq.wasm.js
-	uglifyjs jq.wasm.js -m -c -o jq.wasm.min.js
+	./node_modules/.bin/uglifyjs jq.wasm.js -m -c -o jq.wasm.min.js
 
 test: node_modules/.bin/tape
 	node test.js

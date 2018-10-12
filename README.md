@@ -50,25 +50,10 @@ By default, requiring `jq-web` will give you the `./jq.bundle.min.js` file, whic
 ### Webpack issues
 
 #### `fs`
-The Emscripten runtime will try to `require` the `fs` module, and if it fails it will resort to an in-memory filesystem (almost no use of that is made by the library, but it is needed somehow). In Browserify there's a default `{}` that corresponds to the `fs` module, but in Webpack you must [declare it as an empty module](https://github.com/fiatjaf/jq-web/issues/5#issuecomment-342694955).
+The Emscripten runtime will try to `require` the `fs` module, and if it fails it will resort to an in-memory filesystem (almost no use of that is made of the library, but it is needed somehow). In Browserify there's a default `{}` that corresponds to the `fs` module, but in Webpack you must [declare it as an empty module](https://github.com/fiatjaf/jq-web/issues/5#issuecomment-342694955).
 
 #### 404 error when loading `.wasm` files
 By default projects compiled with Emscripten look for `.wasm` files in the same directory that the `.js` file is run from. This causes issues when using webpack because name of the `.wasm` file is altered with a hash and can be placed in a different directory. To fix this problem you can use the [copy-webpack-plugin](https://github.com/webpack-contrib/copy-webpack-plugin) to copy the `jq.wasm` file to the same directory that the webpack bundle is placed.
-
-##### When the module looks for a file ending in `.wasm` file it is given the path to `jq.wasm` otherwise it returns the default path
-```
-var jqModule = require('jq-web')
-var jqWasm = 'file-loader!jq-web/jq.wasm'
-
-var jq = jqModule({
-  locateFile(path) {
-    if (path.endsWith('.wasm')) {
-      return jqWasm;
-    }
-    return path;
-  }
-})
-```
 
 ## Reference
 
@@ -86,15 +71,11 @@ var jq = jqModule({
 
 1. [Install Emscripten from source](https://kripken.github.io/emscripten-site/docs/getting_started/downloads.html#installation-instructions), we used `1.38.12`
 2. Clone `jq-web` and `cd` into it
-3. Look over the `Makefile`
+3. Look over the `Makefile` for more Emscripten instructions
 4. `make`
-    * This may take awhile the first time if you have never ran Emscripten before
+    * This may take a while the first time if you have never ran Emscripten before
 
 ## Test
 A handful of tests exist in `test.js` and are good place to start when verifying a build
 1. `npm install` or `yarn`
 2. `node test.js`
-
-### traffic statistics for this repository
-
-[![](https://ght.trackingco.de/fiatjaf/jq-web)](https://ght.trackingco.de/)
