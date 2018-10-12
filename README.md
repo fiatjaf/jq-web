@@ -49,7 +49,7 @@ By default, requiring `jq-web` will give you the `./jq.bundle.min.js` file, whic
 
 ### Webpack issues
 
-The Emscripten runtime will try to `require` the `fs` module, and if it fails it will resort to an in-memory filesystem (almost no use of that is made by the library, but it is needed somehow). In Browserify there's a default `{}` that corresponds to the `fs` module, but in Webpack you must [declare it as an empty module](https://github.com/fiatjaf/jq-web/issues/5#issuecomment-342694955).
+The Emscripten runtime will try to `require` the `fs` module, and if it fails it will resort to an in-memory filesystem (almost no use of that is made of the library, but it is needed somehow). In Browserify there's a default `{}` that corresponds to the `fs` module, but in Webpack you must [declare it as an empty module](https://github.com/fiatjaf/jq-web/issues/5#issuecomment-342694955).
 
 ## reference
 
@@ -73,7 +73,3 @@ cat Makefile | head -n 10
 
 make
 ```
-
-### traffic statistics for this repository
-
-[![](https://ght.trackingco.de/fiatjaf/jq-web)](https://ght.trackingco.de/)
