@@ -1,7 +1,7 @@
 var tape = require("tape");
 
-var jq = require("./jq.js")();
-var jqMin = require("./jq.min.js")();
+var jq = require("./jq.js");
+var jqMin = require("./jq.min.js");
 
 tape("jq", function(t) {
   t.plan(3);

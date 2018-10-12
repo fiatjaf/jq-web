@@ -24,6 +24,7 @@ function fromByteArray(data) {
   return decodeURIComponent(escape(str));
 }
 
+// Note about Emscripten, even though the module is now named 'jq', pre.js still uses Module, but post.js uses 'jq'
 Module = Object.assign(
   {
     noInitialRun: true,

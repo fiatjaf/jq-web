@@ -56,10 +56,10 @@ function json(json, filter) {
   }
 }
 
-Module.json = json;
-Module.raw = raw;
+jq.json = json;
+jq.raw = raw;
 
-Module.onInitialized = {
+jq.onInitialized = {
   addListener: function(cb) {
     if (initialized) {
       cb();
@@ -68,25 +68,25 @@ Module.onInitialized = {
   }
 };
 
-Module.promised = {};
-Module.promised.json = function() {
+jq.promised = {};
+jq.promised.json = function() {
   var args = arguments;
   return new Promise(function(resolve, reject) {
-    Module.onInitialized.addListener(function() {
+    jq.onInitialized.addListener(function() {
       try {
-        resolve(Module.json.apply(Module, args));
+        resolve(jq.json.apply(jq, args));
       } catch (e) {
         reject(e);
       }
     });
   });
 };
-Module.promised.raw = function() {
+jq.promised.raw = function() {
   var args = arguments;
   return new Promise(function(resolve, reject) {
-    Module.onInitialized.addListener(function() {
+    jq.onInitialized.addListener(function() {
       try {
-        resolve(Module.raw.apply(Module, args));
+        resolve(jq.raw.apply(jq, args));
       } catch (e) {
         reject(e);
       }
