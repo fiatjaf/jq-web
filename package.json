@@ -1,6 +1,6 @@
 {
   "name": "jq-web",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "a hack that makes jq run in the browser with emscripten.",
   "main": "jq.asm.bundle.min.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "filter",
     "path"
   ],
-  "author": "Giovanni T. Parra",
+  "author": "fiatjaf",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/fiatjaf/jq-web/issues"
