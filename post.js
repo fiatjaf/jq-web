@@ -31,7 +31,9 @@ function raw(jsonstring, filter, flags) {
       var parts = errString.split(':')
       errString = parts[parts.length - 1].trim()
     }
-    throw new Error(errString)
+    var err = new Error(errString)
+    err.stack = errBufferContents
+    throw err
   }
 
   return ''

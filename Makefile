@@ -29,21 +29,21 @@ jq/jq.o: jq/configure
 
 jq.asm.js: jq/jq.o pre.js post.js
 	cd jq && \
-	  emcc -O3 -s TOTAL_MEMORY=32MB -s MODULARIZE_INSTANCE=1 -s EXPORT_NAME="jq" -s WASM=0 --memory-init-file 1 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.asm.js
+	  emcc -O3 -s EXTRA_EXPORTED_RUNTIME_METHODS='["callMain"]' -s TOTAL_MEMORY=32MB -s MODULARIZE_INSTANCE=1 -s EXPORT_NAME="jq" -s WASM=0 --memory-init-file 1 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.asm.js
 
 jq.asm.min.js: node_modules/.bin/uglifyjs jq.asm.js
 	./node_modules/.bin/uglifyjs jq.asm.js -m -c -o jq.asm.min.js
 
 jq.asm.bundle.js: jq/jq.o pre.js post.js
 	cd jq && \
-	  emcc -O3 -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE_INSTANCE=1 -s EXPORT_NAME="jq" -s WASM=0 --memory-init-file 0 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.asm.bundle.js
+	  emcc -O3 -s EXTRA_EXPORTED_RUNTIME_METHODS='["callMain"]' -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE_INSTANCE=1 -s EXPORT_NAME="jq" -s WASM=0 --memory-init-file 0 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.asm.bundle.js
 
 jq.asm.bundle.min.js: node_modules/.bin/uglifyjs jq.asm.bundle.js
 	./node_modules/.bin/uglifyjs jq.asm.bundle.js -m -c -o jq.asm.bundle.min.js
 
 jq.wasm.js: jq/jq.o pre.js post.js
 	cd jq && \
-	  emcc -O3 -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE_INSTANCE=1 -s EXPORT_NAME="jq" -s WASM=1 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.wasm.js
+	  emcc -O3 -s EXTRA_EXPORTED_RUNTIME_METHODS='["callMain"]' -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE_INSTANCE=1 -s EXPORT_NAME="jq" -s WASM=1 --pre-js ../pre.js --post-js ../post.js jq.o -o ../jq.wasm.js
 
 jq.wasm.min.js: node_modules/.bin/uglifyjs jq.wasm.js
 	./node_modules/.bin/uglifyjs jq.wasm.js -m -c -o jq.wasm.min.js
