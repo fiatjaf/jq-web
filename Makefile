@@ -18,6 +18,7 @@ jq/configure: .gitmodules
 	git submodule update --init
 	cd jq && \
 	  git submodule update --init && \
+	  patch -sf src/main.c <../main.patch && \
 	  autoreconf -fi
 
 jq/jq.o: jq/configure
