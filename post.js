@@ -27,6 +27,10 @@ function raw(jsonstring, filter, flags) {
   FS.streams[1] = FS.open('/dev/stdout', 577, 0)
   FS.streams[2] = FS.open('/dev/stderr', 577, 0)
 
+  if (errBuffer.length) {
+    console.log('%cstderr%c: %c%s', 'background:red;color:black', '', 'color:red', fromByteArray(errBuffer))
+  }
+
   if (outBuffer.length) {
     return fromByteArray(outBuffer).trim()
   }
