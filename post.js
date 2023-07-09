@@ -13,8 +13,15 @@ function raw(jsonstring, filter, flags) {
   outBuffer = []
   errBuffer = []
 
+  // window.FS=FS
   flags = flags || []
-  Module.callMain(flags.concat(filter))
+  Module.callMain(flags.concat(filter, '/dev/stdin')) // induce c main open it
+
+  // make sure closed & clean up fd
+  if(FS.streams[1]) FS.close(FS.streams[1])
+  if(FS.streams[2]) FS.close(FS.streams[2])
+  if(FS.streams[3]) FS.close(FS.streams[3])
+  if(FS.streams.length>3) FS.streams.pop()
 
   // calling main closes stdout, so we reopen it here:
   FS.streams[1] = FS.open('/dev/stdout', 577, 0)
