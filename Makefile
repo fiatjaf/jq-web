@@ -18,8 +18,7 @@ jq/configure:
 	git submodule update --init
 	cd jq && \
 	  git submodule update --init && \
-	  autoreconf -fi && \
-	  patch -st src/main.c <../main.patch
+	  autoreconf -fi
 
 jq/Makefile: jq/configure
 	cd jq && emconfigure ./configure --disable-maintainer-mode --disable-silent-rules --with-oniguruma=builtin
