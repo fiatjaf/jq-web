@@ -9,7 +9,7 @@ tape('jq', async function(t) {
 })
 
 function doJQTests(t, jq) {
-  t.plan(7);
+  t.plan(8);
 
   t.deepEqual(
     Object.keys(jq).sort(),
@@ -50,5 +50,11 @@ function doJQTests(t, jq) {
   t.deepEqual(
     jq.json([123], '.'),
     [123],
+  );
+
+  t.equals(
+    jq.raw(Number.MAX_SAFE_INTEGER + "000", '.'),
+    Number.MAX_SAFE_INTEGER + "000",
+    'Number that exceeds MAX_SAFE_INTEGER round-trips.',
   );
 }
