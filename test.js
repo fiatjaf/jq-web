@@ -1,73 +1,54 @@
 /** @format */
 
-var tape = require('tape')
+const tape = require('tape');
 
-var jq = require('./jq.asm.js')
-var jqMin = require('./jq.asm.min.js')
+const jq = require('./jq.js');
 
-tape('jq', function(t) {
-  t.plan(3)
+tape('jq', async function(t) {
+  doJQTests(t, await jq);
+})
 
-  jq.onInitialized.addListener(() => {
-    t.deepEquals(
+function doJQTests(t, jq) {
+  t.plan(7);
+
+  t.deepEqual(
+    Object.keys(jq).sort(),
+    ["json", "raw"],
+    "expected API",
+  );
+
+  t.deepEquals(
       jq.json(
-        {a: 'a letter', b: 'other letter', '%': null},
-        '[.a, .["%"]] | {res: .}'
-      ),
-      {res: ['a letter', null]}
-    )
-
-    t.equals(
-      jq.raw('["a", {"12": "üñìçôdẽ"}]', '.[1]["12"] | {"what?": .}'),
-      `{\n  "what?": "üñìçôdẽ"\n}`
-    )
-
-    t.equals(
-      jq.json({message: 'This is an emoji test 🙏'}, '.message'),
-      'This is an emoji test 🙏'
-    )
-  })
-})
-
-tape('jq.min', function(t) {
-  t.plan(3)
-
-  jqMin.onInitialized.addListener(() => {
-    t.deepEquals(
-      jqMin.json(
-        {a: 'a letter', b: 'other letter', '%': null},
-        '[.a, .["%"]] | {res: .}'
-      ),
-      {res: ['a letter', null]}
-    )
-
-    t.equals(
-      jqMin.raw('["a", {"12": "üñìçôdẽ"}]', '.[1]["12"] | {"what?": .}'),
-      `{\n  "what?": "üñìçôdẽ"\n}`
-    )
-
-    t.equals(
-      jqMin.json({message: 'This is an emoji test 🙏'}, '.message'),
-      'This is an emoji test 🙏'
-    )
-  })
-})
-
-tape('jq.promise', function(t) {
-  t.plan(2)
-
-  jqMin.promised
-    .json(
       {a: 'a letter', b: 'other letter', '%': null},
       '[.a, .["%"]] | {res: .}'
-    )
-    .then(res => {
-      t.deepEquals(res, {res: ['a letter', null]})
-    })
+      ),
+      {res: ['a letter', null]}
+  );
 
-  jqMin.promised
-    .raw('["a", {"12": "üñìçôdẽ"}]', '.[1]["12"] | {"what?": .}')
-    .then(res => {
-      t.equals(res, `{\n  "what?": "üñìçôdẽ"\n}`)
-    })
-})
+  t.equals(
+      jq.raw('["a", {"12": "üñìçôdẽ"}]', '.[1]["12"] | {"what?": .}'),
+      `{\n  "what?": "üñìçôdẽ"\n}`
+  );
+
+  t.equals(
+      jq.json({message: 'This is an emoji test 🙏'}, '.message'),
+      'This is an emoji test 🙏'
+  );
+
+  t.throws(
+    () => { jq.raw('invalid JSON', '.') },
+    null,
+    "Invalid JSON triggers an exception.",
+  );
+
+  t.equals(
+    jq.raw('123', '.'),
+    '123',
+    "raw() works after invalid JSON.",
+  );
+
+  t.deepEqual(
+    jq.json([123], '.'),
+    [123],
+  );
+}

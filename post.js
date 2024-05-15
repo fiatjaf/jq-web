@@ -6,8 +6,6 @@ function exit() {}
 // takes a string as input and returns a string
 // like `echo <jsonstring> | jq <filter>`, returning the value of STDOUT
 function raw(jsonstring, filter, flags) {
-  if (!initialized) return '{}'
-
   stdin = jsonstring
   inBuffer = []
   outBuffer = []
@@ -52,8 +50,6 @@ function raw(jsonstring, filter, flags) {
 
 // takes an object as input and tries to return objects.
 function json(json, filter) {
-  if (!initialized) return {}
-
   var jsonstring = JSON.stringify(json)
   var result = raw(jsonstring, filter, ['-c']).trim()
 
@@ -71,40 +67,7 @@ function json(json, filter) {
   }
 }
 
-jq.json = json
-jq.raw = raw
-
-jq.onInitialized = {
-  addListener: function(cb) {
-    if (initialized) {
-      cb()
-    }
-    initListeners.push(cb)
-  }
-}
-
-jq.promised = {}
-jq.promised.json = function() {
-  var args = arguments
-  return new Promise(function(resolve, reject) {
-    jq.onInitialized.addListener(function() {
-      try {
-        resolve(jq.json.apply(jq, args))
-      } catch (e) {
-        reject(e)
-      }
-    })
-  })
-}
-jq.promised.raw = function() {
-  var args = arguments
-  return new Promise(function(resolve, reject) {
-    jq.onInitialized.addListener(function() {
-      try {
-        resolve(jq.raw.apply(jq, args))
-      } catch (e) {
-        reject(e)
-      }
-    })
-  })
-}
+Object.assign(
+    Module,
+    { json, raw },
+);

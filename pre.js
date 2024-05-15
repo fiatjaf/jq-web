@@ -1,8 +1,5 @@
 /** @format */
 
-var initialized = false
-var initListeners = []
-
 var stdin = ''
 var inBuffer = []
 var outBuffer = []
@@ -31,12 +28,7 @@ Module = Object.assign(
   {
     noInitialRun: true,
     noExitRuntime: true,
-    onRuntimeInitialized: function() {
-      initialized = true
-      initListeners.forEach(function(cb) {
-        cb()
-      })
-    },
+    FS: FS,
     preRun: function() {
       FS.init(
         function input() {
