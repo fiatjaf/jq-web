@@ -1,19 +1,55 @@
 /** @format */
 
-// necessary because the default emscriptem exit() logs a lot of text.
-function exit() {}
+const NEWLINE = 0xa;
+
+const utf8Decoder = new TextDecoder();
+
+function fromByteArray(data) {
+  let u8Array = new Uint8Array(data);
+
+  // Ignore trailing newline:
+  if (u8Array[u8Array.length - 1] === NEWLINE) {
+    u8Array = new Uint8Array(u8Array.buffer, 0, u8Array.length - 1);
+  }
+
+  return utf8Decoder.decode(u8Array);
+}
 
 // takes a string as input and returns a string
 // like `echo <jsonstring> | jq <filter>`, returning the value of STDOUT
 function raw(jsonstring, filter, flags) {
   stdin = jsonstring
-  inBuffer = []
-  outBuffer = []
-  errBuffer = []
+  inBuffer = null;
+  outBuffer = [];
+  errBuffer = [];
 
   // window.FS=FS
   flags = flags || []
-  Module.callMain(flags.concat(filter, '/dev/stdin')) // induce c main open it
+
+  let mainErr, stdout, stderr, exitCode;
+
+  // Emscripten 3.1.31 neglects to free its argv, so we’ll do it here.
+  // This should be safe to do even if Emscripten fixes that.
+  const stackBefore = stackSave();
+
+  // Emscripten, as of 3.1.31, mucks with process.exitCode, which
+  // makes no sense.
+  let preExitCode;
+  if (typeof process !== "undefined") {
+    preExitCode = process.exitCode;
+  }
+
+  try {
+    exitCode = Module.callMain(flags.concat(filter, '/dev/stdin')); // induce c main open it
+  } catch (e) {
+    mainErr = e;
+  }
+
+  if (preExitCode !== undefined) {
+    process.exitCode = preExitCode;
+  }
+
+  stackRestore(stackBefore);
 
   // make sure closed & clean up fd
   if(FS.streams[1]) FS.close(FS.streams[1])
@@ -26,26 +62,29 @@ function raw(jsonstring, filter, flags) {
   FS.streams[2] = FS.open('/dev/stderr', 577, 0)
 
   if (errBuffer.length) {
-    console.log('%cstderr%c: %c%s', 'background:red;color:black', '', 'color:red', fromByteArray(errBuffer))
+    stderr = fromByteArray(errBuffer);
+    console.warn('%cstderr%c: %c%s', 'background:red;color:black', '', 'color:red', stderr);
   }
 
   if (outBuffer.length) {
-    return fromByteArray(outBuffer).trim()
+    stdout = fromByteArray(outBuffer);
   }
 
-  if (errBuffer.length) {
-    var errBufferContents = fromByteArray(errBuffer)
-    var errString = errBufferContents
-    if (errString.indexOf(':') > -1) {
-      var parts = errString.split(':')
-      errString = parts[parts.length - 1].trim()
+  try {
+    if (mainErr) {
+      throw mainErr;
+    } else if (exitCode !== 0) {
+      const err = new Error(`Non-zero JQ exit code: ${exitCode}`);
+      if (stderr) err.stderr = stderr;
+      err.exitCode = exitCode;
+      throw err;
     }
-    var err = new Error(errString)
-    err.stack = errBufferContents
-    throw err
+  } catch (e) {
+    if (stderr) e.stderr = stderr;
+    throw e;
   }
 
-  return ''
+  return stdout;
 }
 
 // takes an object as input and tries to return objects.

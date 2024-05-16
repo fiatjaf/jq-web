@@ -2,11 +2,41 @@
 
 const tape = require('tape');
 
-const jq = require('./jq.js');
+const jqPromise = require('./jq.js');
 
-tape('jq', async function(t) {
-  doJQTests(t, await jq);
-})
+tape('jq behavior', async function(t) {
+  doJQTests(t, await jqPromise);
+});
+
+/*
+tape('detect memory leaks', async function(t) {
+  const iterations = 1000;
+  t.plan(iterations);
+
+  const jq = await jqPromise;
+
+  [...Array(iterations)].forEach( (_, i) => {
+    t.doesNotThrow(
+      () => {
+        jq.raw(
+            `{"foo": 1, "bar": 2, "deep": { "qux": 3 } }`,
+            `.foo`,
+        );
+      },
+    );
+
+    t.throws(
+      () => {
+        jq.raw(
+            `{"foo": 1, "bar": 2, "deep": { "qux": 3 } }`,
+            `.foo,`,
+        );
+      },
+      /exit code/i,
+    );
+  });
+});
+*/
 
 function doJQTests(t, jq) {
   t.plan(8);

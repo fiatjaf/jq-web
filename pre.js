@@ -1,57 +1,38 @@
 /** @format */
 
 var stdin = ''
-var inBuffer = []
-var outBuffer = []
-var errBuffer = []
+var inBuffer;
+var outBuffer;
+var errBuffer;
 
-function toByteArray(str) {
-  var byteArray = []
-  var encodedStr = unescape(encodeURIComponent(str))
-  for (var i = 0; i < encodedStr.length; i++) {
-    byteArray.push(encodedStr.charCodeAt(i))
-  }
-  return byteArray
-}
-
-function fromByteArray(data) {
-  var array = new Uint8Array(data)
-  var str = ''
-  for (var i = 0; i < array.length; ++i) {
-    str += String.fromCharCode(array[i])
-  }
-  return decodeURIComponent(escape(str))
-}
+const utf8Encoder = new TextEncoder();
 
 // Note about Emscripten, even though the module is now named 'jq', pre.js still uses Module, but post.js uses 'jq'
 Module = Object.assign(
   {
     noInitialRun: true,
-    noExitRuntime: true,
+    noExitRuntime: false,
     FS: FS,
     preRun: function() {
       FS.init(
         function input() {
-          if (inBuffer.length) {
-            return inBuffer.pop()
+          if (!inBuffer && stdin) {
+            inBuffer = utf8Encoder.encode(stdin);
           }
 
-          if (!stdin) return null
-          inBuffer = toByteArray(stdin)
-          stdin = ''
-          inBuffer.push(null)
-          inBuffer.reverse()
-          return inBuffer.pop()
+          if (inBuffer && inBuffer.length) {
+            const thisByte = inBuffer[0];
+            inBuffer = new Uint8Array(inBuffer.buffer, inBuffer.byteOffset + 1);
+            return thisByte;
+          }
+
+          return null;
         },
         function output(c) {
-          if (c) {
-            outBuffer.push(c)
-          }
+          outBuffer.push(c)
         },
         function error(c) {
-          if (c) {
-            errBuffer.push(c)
-          }
+          errBuffer.push(c)
         }
       )
     }
