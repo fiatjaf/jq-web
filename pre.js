@@ -29,10 +29,10 @@ Module = Object.assign(
           return null;
         },
         function output(c) {
-          outBuffer.push(c)
+          if (c) outBuffer.push(c)
         },
         function error(c) {
-          errBuffer.push(c)
+          if (c) errBuffer.push(c)
         }
       )
     }
