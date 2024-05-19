@@ -18,8 +18,6 @@ function fromByteArray(data) {
 // takes a string as input and returns a string
 // like `echo <jsonstring> | jq <filter>`, returning the value of STDOUT
 function raw(jsonstring, filter, flags) {
-  stdin = jsonstring
-  inBuffer = null;
   outBuffer = [];
   errBuffer = [];
 
@@ -39,8 +37,10 @@ function raw(jsonstring, filter, flags) {
     preExitCode = process.exitCode;
   }
 
+  FS.writeFile("inputString", jsonstring);
+
   try {
-    exitCode = Module.callMain(flags.concat(filter, '/dev/stdin')); // induce c main open it
+    exitCode = Module.callMain(flags.concat(filter, "inputString")); // induce c main open it
   } catch (e) {
     mainErr = e;
   }

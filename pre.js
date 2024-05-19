@@ -1,7 +1,5 @@
 /** @format */
 
-var stdin = ''
-var inBuffer;
 var outBuffer;
 var errBuffer;
 
@@ -16,17 +14,7 @@ Module = Object.assign(
     preRun: function() {
       FS.init(
         function input() {
-          if (!inBuffer && stdin) {
-            inBuffer = utf8Encoder.encode(stdin);
-          }
-
-          if (inBuffer && inBuffer.length) {
-            const thisByte = inBuffer[0];
-            inBuffer = new Uint8Array(inBuffer.buffer, inBuffer.byteOffset + 1);
-            return thisByte;
-          }
-
-          return null;
+          throw "should not happen";
         },
         function output(c) {
           if (c) outBuffer.push(c)
