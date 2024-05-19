@@ -52,18 +52,16 @@ function raw(jsonstring, filter, flags) {
   stackRestore(stackBefore);
 
   // make sure closed & clean up fd
-  if(FS.streams[1]) FS.close(FS.streams[1])
-  if(FS.streams[2]) FS.close(FS.streams[2])
-  if(FS.streams[3]) FS.close(FS.streams[3])
-  if(FS.streams.length>3) FS.streams.pop()
+  FS.streams.forEach( stream => stream && FS.close(stream) );
+  if (FS.streams.length>3) FS.streams = FS.streams.slice(0, 3);
 
   // calling main closes stdout, so we reopen it here:
+  FS.streams[0] = FS.open('/dev/stdin', "r")
   FS.streams[1] = FS.open('/dev/stdout', 577, 0)
   FS.streams[2] = FS.open('/dev/stderr', 577, 0)
 
   if (errBuffer.length) {
-    stderr = fromByteArray(errBuffer);
-    console.warn('%cstderr%c: %c%s', 'background:red;color:black', '', 'color:red', stderr);
+    stderr = fromByteArray(errBuffer).trim();
   }
 
   if (outBuffer.length) {
@@ -73,11 +71,17 @@ function raw(jsonstring, filter, flags) {
   try {
     if (mainErr) {
       throw mainErr;
-    } else if (exitCode !== 0) {
-      const err = new Error(`Non-zero JQ exit code: ${exitCode}`);
-      if (stderr) err.stderr = stderr;
+    } else if (exitCode) {
+      let errMsg = `Non-zero exit code: ${exitCode}`;
+      if (stderr) errMsg += `\n${stderr}`;
+
+      const err = new Error(errMsg);
       err.exitCode = exitCode;
+      if (stderr) err.stderr += stderr;
+
       throw err;
+    } else if (stderr) {
+      console.warn('%cstderr%c: %c%s', 'background:red;color:black', '', 'color:red', stderr);
     }
   } catch (e) {
     if (stderr) e.stderr = stderr;
