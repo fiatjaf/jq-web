@@ -1,73 +1,90 @@
 /** @format */
 
-var tape = require('tape')
+const tape = require('tape');
 
-var jq = require('./jq.asm.js')
-var jqMin = require('./jq.asm.min.js')
+const jqPromise = require('./jq.js');
 
-tape('jq', function(t) {
-  t.plan(3)
+tape('jq behavior', async function(t) {
+  doJQTests(t, await jqPromise);
+});
 
-  jq.onInitialized.addListener(() => {
-    t.deepEquals(
+/*
+tape('detect memory leaks', async function(t) {
+  const iterations = 1000;
+  t.plan(iterations);
+
+  const jq = await jqPromise;
+
+  [...Array(iterations)].forEach( (_, i) => {
+    t.doesNotThrow(
+      () => {
+        jq.raw(
+            `{"foo": 1, "bar": 2, "deep": { "qux": 3 } }`,
+            `.foo`,
+        );
+      },
+    );
+
+    t.throws(
+      () => {
+        jq.raw(
+            `{"foo": 1, "bar": 2, "deep": { "qux": 3 } }`,
+            `.foo,`,
+        );
+      },
+      /exit code/i,
+    );
+  });
+});
+*/
+
+function doJQTests(t, jq) {
+  t.plan(8);
+
+  t.deepEqual(
+    Object.keys(jq).sort(),
+    ["json", "raw"],
+    "expected API",
+  );
+
+  t.deepEquals(
       jq.json(
-        {a: 'a letter', b: 'other letter', '%': null},
-        '[.a, .["%"]] | {res: .}'
-      ),
-      {res: ['a letter', null]}
-    )
-
-    t.equals(
-      jq.raw('["a", {"12": "üñìçôdẽ"}]', '.[1]["12"] | {"what?": .}'),
-      `{\n  "what?": "üñìçôdẽ"\n}`
-    )
-
-    t.equals(
-      jq.json({message: 'This is an emoji test 🙏'}, '.message'),
-      'This is an emoji test 🙏'
-    )
-  })
-})
-
-tape('jq.min', function(t) {
-  t.plan(3)
-
-  jqMin.onInitialized.addListener(() => {
-    t.deepEquals(
-      jqMin.json(
-        {a: 'a letter', b: 'other letter', '%': null},
-        '[.a, .["%"]] | {res: .}'
-      ),
-      {res: ['a letter', null]}
-    )
-
-    t.equals(
-      jqMin.raw('["a", {"12": "üñìçôdẽ"}]', '.[1]["12"] | {"what?": .}'),
-      `{\n  "what?": "üñìçôdẽ"\n}`
-    )
-
-    t.equals(
-      jqMin.json({message: 'This is an emoji test 🙏'}, '.message'),
-      'This is an emoji test 🙏'
-    )
-  })
-})
-
-tape('jq.promise', function(t) {
-  t.plan(2)
-
-  jqMin.promised
-    .json(
       {a: 'a letter', b: 'other letter', '%': null},
       '[.a, .["%"]] | {res: .}'
-    )
-    .then(res => {
-      t.deepEquals(res, {res: ['a letter', null]})
-    })
+      ),
+      {res: ['a letter', null]}
+  );
 
-  jqMin.promised
-    .raw('["a", {"12": "üñìçôdẽ"}]', '.[1]["12"] | {"what?": .}')
-    .then(res => {
-      t.equals(res, `{\n  "what?": "üñìçôdẽ"\n}`)
-    })
-})
+  t.equals(
+      jq.raw('["a", {"12": "üñìçôdẽ"}]', '.[1]["12"] | {"what?": .}'),
+      `{\n  "what?": "üñìçôdẽ"\n}`
+  );
+
+  t.equals(
+      jq.json({message: 'This is an emoji test 🙏'}, '.message'),
+      'This is an emoji test 🙏'
+  );
+
+  t.throws(
+    () => { jq.raw('invalid JSON', '.') },
+    null,
+    "Invalid JSON triggers an exception.",
+  );
+
+  t.equals(
+    jq.raw('123', '.'),
+    '123',
+    "raw() works after invalid JSON.",
+  );
+
+  t.deepEqual(
+    jq.json([123], '.'),
+    [123],
+  );
+
+  t.equals(
+    jq.raw(Number.MAX_SAFE_INTEGER + "000", '.'),
+    Number.MAX_SAFE_INTEGER + "000",
+    'Number that exceeds MAX_SAFE_INTEGER round-trips.',
+  );
+}

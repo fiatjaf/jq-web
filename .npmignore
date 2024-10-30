@@ -2,6 +2,7 @@ jq
 node_modules
 .*
 Makefile
+extern-post.js
 post.js
 pre.js
 index.html

@@ -1,0 +1,21 @@
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+  pull_request:
+
+jobs:
+    # As of this writing, Ubuntu’s emscripten doesn’t accommodate
+    # the Node.js bug described in
+    # https://github.com/emscripten-core/emscripten/issues/16913.
+    #
+    # So no Linux for now.
+    mac:
+        runs-on: macOS-latest
+        steps:
+        - run: node --version
+        - uses: actions/checkout@main
+        - run: brew install emscripten autoconf automake libtool
+        - run: make test
