@@ -1,18 +1,7 @@
-# based on https://gist.github.com/passcod/4b382bc836456b77249b
-#
-# befofe hitting 'make' you should have a shell with emconfigure and emcc.
-# install emscripten and follow instructions here:
-#   https://kripken.github.io/emscripten-site/docs/tools_reference/emsdk.html
-# basically you must call (on bash):
-#  ~/emsdk-portable/emsdk update
-#  ~/emsdk-portable/emsdk install latest
-#  ~/emsdk-portable/emsdk activate latest
-#  source ~/emsdk-portable/emsdk_env.sh
-
 all: jq.js jq.wasm
 
 clean:
-	rm -f jq jq.*
+	rm -fr jq jq.*
 
 jq/configure:
 	git submodule update --init
@@ -36,13 +25,5 @@ jq.wasm: jq/jq jq/jq.wasm
 	cp -f jq/jq.wasm .
 
 @PHONY:
-test: jq.js node_modules/.bin/tape
+test: jq.js
 	node test.js
-
-node_modules/.bin/tape: node_modules
-
-node_modules/.bin/uglifyjs: node_modules
-
-@PHONY:
-node_modules:
-	npm install
