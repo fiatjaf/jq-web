@@ -25,7 +25,7 @@ jq/Makefile: jq/configure
 
 jq/jq: jq/Makefile pre.js post.js extern-post.js
 	rm -f $@ # needed for emcc to replace existing file
-	cd jq && env CCFLAGS=-O2 emmake make V=1 VERBOSE=1 LDFLAGS="-all-static -s EXPORTED_RUNTIME_METHODS='[\"callMain\"]' -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s EXPORT_NAME=jq -s WASM=1 --pre-js ../pre.js --post-js ../post.js --extern-post-js ../extern-post.js" CCFLAGS=-O2 -j4
+	cd jq && env CCFLAGS=-O2 emmake make V=1 VERBOSE=1 LDFLAGS="-all-static -s EXPORTED_RUNTIME_METHODS='[\"callMain\"]' -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s USE_PTHREADS=0 -s EXPORT_NAME=jq -s WASM=1 --pre-js ../pre.js --post-js ../post.js --extern-post-js ../extern-post.js" CCFLAGS=-O2 -j4
 
 jq.js: jq/jq jq.wasm
 	cp -f jq/jq ./jq.js
