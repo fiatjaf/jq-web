@@ -18,4 +18,5 @@ jobs:
         - run: node --version
         - uses: actions/checkout@main
         - run: brew install emscripten autoconf automake libtool
+        - run: npm install
         - run: make test
