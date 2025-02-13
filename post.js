@@ -39,10 +39,32 @@ function raw(jsonstring, filter, flags) {
 
   FS.writeFile("inputString", jsonstring);
 
+  let files = [];
   try {
+    for (let i = 0; i < flags.length; i++) {
+      if (flags[i] !== "--argjson") {
+        continue;
+      }
+
+      const fileIndex = i + 2;
+      const argName = '$' + flags[i + 1];
+      const fileName = 'file_'+ fileIndex;
+      flags[i] = "--slurpfile";
+      
+      if (typeof filter === 'string') {
+        filter = filter.replaceAll(argName, argName + '[0]');
+      }
+
+      FS.writeFile(fileName, flags[fileIndex]);
+      files.push(fileName);
+      flags[fileIndex] = "file_" + fileIndex;
+    }
     exitCode = Module.callMain(flags.concat(filter, "inputString")); // induce c main open it
   } catch (e) {
     mainErr = e;
+  } finally {
+    files.forEach(file => FS.unlink(file));
+    files = [];
   }
 
   if (preExitCode !== undefined) {
