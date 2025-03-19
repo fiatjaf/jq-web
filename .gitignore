@@ -4,3 +4,4 @@ browserify-cache.json
 *.swo
 *.swp
 jq.*
+emsdk
