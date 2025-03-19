@@ -52,7 +52,7 @@ function raw(jsonstring, filter, flags) {
       flags[i] = "--slurpfile";
       
       if (typeof filter === 'string') {
-        filter = filter.replaceAll(argName, argName + '[0]');
+        filter = argName + '[0] as ' + argName + ' | ' + filter;
       }
 
       FS.writeFile(fileName, flags[fileIndex]);
