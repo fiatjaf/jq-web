@@ -39,7 +39,7 @@ tape('detect memory leaks', async function(t) {
 */
 
 function doJQTests(t, jq) {
-  t.plan(8);
+  t.plan(9);
 
   t.deepEqual(
     Object.keys(jq).sort(),
@@ -87,4 +87,11 @@ function doJQTests(t, jq) {
     Number.MAX_SAFE_INTEGER + "000",
     'Number that exceeds MAX_SAFE_INTEGER round-trips.',
   );
+
+  t.equals(
+    jq.raw('{}', '$a +  $a1', ['--argjson', 'a', '1', '--argjson', 'a1', '2']),
+    '3',
+    '--argjson works with keys that are substrings of each other'
+);
+
 }
