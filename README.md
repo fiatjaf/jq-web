@@ -41,6 +41,38 @@ The Emscripten runtime will try to `require` the `fs` module, and if it fails it
 #### 404 error when loading `.wasm` files
 By default projects compiled with Emscripten look for `.wasm` files in the same directory that the `.js` file is run from. This causes issues when using webpack because name of the `.wasm` file is altered with a hash and can be placed in a different directory. To fix this problem you can use the [copy-webpack-plugin](https://github.com/webpack-contrib/copy-webpack-plugin) to copy the `jq.wasm` file to the same directory that the webpack bundle is placed.
 
+For Next.js (tested on 15.2.4) projects, update your next.config.ts file to solve both the fs problem and missing .wasm file problem
+```ts
+import type { NextConfig } from "next";
+import CopyWebpackPlugin from "copy-webpack-plugin";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...(config.resolve.fallback || {}),
+      fs: false,
+    };
+
+    config.plugins = config.plugins || [];
+    config.plugins.push(
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: require.resolve('jq-web/jq.wasm'),
+            to: 'static/chunks/[name][ext]', // This will copy to .next/static/chunks/
+          },
+        ],
+      })
+    );
+
+    return config;
+  },
+};
+
+export default nextConfig;
+```
+
 ## Reference
 
 `jq-web` exports a promise that resolves to an object with `json` and `raw` methods.
